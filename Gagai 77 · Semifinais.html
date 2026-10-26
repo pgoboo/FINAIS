@@ -1,0 +1,464 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Gagai 77 · Semifinais</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: placar no topo, legenda de intensidade, semanas como "quartos" do jogo, cada dia abre o passo a passo */
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --fg:#14181f; --muted:#5b6472; --line:#d9dde3;
+  --accent:#d9561b; --accent-soft:#fbe4d8;
+  --heavy:#b4232c; --heavy-bg:#fbe3e4;
+  --strong:#c26a00; --strong-bg:#fdefd9;
+  --fast:#1f5fbf; --fast-bg:#e0ebfb;
+  --light:#2f7d4f; --light-bg:#e1f2e7;
+  --game:#14181f; --game-fg:#ffffff;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1319; --surface:#171c24; --fg:#e8ebf0; --muted:#98a1ae; --line:#2a313c;
+  --accent:#f27a3d; --accent-soft:#3a2216;
+  --heavy:#ff7a80; --heavy-bg:#3a1a1d; --strong:#f2a94a; --strong-bg:#35270f;
+  --fast:#7fb0ff; --fast-bg:#16253d; --light:#6fd39a; --light-bg:#14301f;
+  --game:#f27a3d; --game-fg:#0f1319; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1319; --surface:#171c24; --fg:#e8ebf0; --muted:#98a1ae; --line:#2a313c;
+  --accent:#f27a3d; --accent-soft:#3a2216;
+  --heavy:#ff7a80; --heavy-bg:#3a1a1d; --strong:#f2a94a; --strong-bg:#35270f;
+  --fast:#7fb0ff; --fast-bg:#16253d; --light:#6fd39a; --light-bg:#14301f;
+  --game:#f27a3d; --game-fg:#0f1319; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.05}
+h1{font-size:2.6rem;font-weight:800;letter-spacing:.01em;text-transform:uppercase}
+h2{font-size:1.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+h3{font-size:1.2rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--muted)}
+.board{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.score{background:var(--game);color:var(--game-fg);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.score b{font-family:var(--display);font-size:2.2rem;line-height:1;font-variant-numeric:tabular-nums}
+.score span{font-size:.8rem;opacity:.85}
+.warn{border-left:4px solid var(--heavy);background:var(--surface);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+.lg{padding:10px 12px;border-radius:6px;display:flex;flex-direction:column;gap:3px;font-size:.88rem}
+.tag{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;font-weight:500;white-space:nowrap}
+.t-heavy{background:var(--heavy-bg);color:var(--heavy)} .t-strong{background:var(--strong-bg);color:var(--strong)}
+.t-fast{background:var(--fast-bg);color:var(--fast)} .t-light{background:var(--light-bg);color:var(--light)}
+.t-game{background:var(--game);color:var(--game-fg)}
+.lg.t-heavy b,.lg.t-strong b,.lg.t-fast b,.lg.t-light b{font-family:var(--display);font-size:1.15rem;text-transform:uppercase}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.tabs button{font-family:var(--display);font-size:1rem;font-weight:700;text-transform:uppercase;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:8px 12px;border-radius:4px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.tabs button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.weekhead{display:flex;flex-direction:column;gap:4px}
+.days{display:flex;flex-direction:column;gap:8px}
+details.day{background:var(--surface);border:1px solid var(--line);border-radius:6px}
+details.day.game{border-color:var(--accent);border-width:2px}
+details.day.today{box-shadow:0 0 0 2px var(--accent)}
+summary{list-style:none;cursor:pointer;padding:12px 14px;display:grid;grid-template-columns:58px 1fr auto;gap:10px;align-items:center}
+summary::-webkit-details-marker{display:none}
+.date{font-family:var(--display);line-height:1;display:flex;flex-direction:column}
+.date b{font-size:1.7rem;font-variant-numeric:tabular-nums}
+.date small{font-size:.8rem;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sumtxt{min-width:0;display:flex;flex-direction:column;gap:4px}
+.sumtxt strong{font-size:1rem;line-height:1.25}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.done{display:flex;align-items:center;gap:4px;font-size:.75rem;color:var(--muted)}
+.done input{width:20px;height:20px;accent-color:var(--accent)}
+.body{padding:0 14px 16px;display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:14px}
+.block{display:flex;flex-direction:column;gap:8px}
+.block h4{margin:0;font-family:var(--display);font-size:1.05rem;text-transform:uppercase;letter-spacing:.04em;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.block h4 em{font-style:normal;font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:0;text-transform:none}
+ol.ex{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;counter-reset:ex}
+ol.ex li{counter-increment:ex;display:grid;grid-template-columns:24px 1fr;gap:8px}
+ol.ex li::before{content:counter(ex);font-family:var(--mono);font-size:.8rem;color:var(--accent);padding-top:2px}
+.exn{display:flex;flex-wrap:wrap;gap:6px;align-items:baseline}
+.exn b{font-weight:700}
+.rx{font-family:var(--mono);font-size:.82rem;font-variant-numeric:tabular-nums}
+.cue{font-size:.92rem;color:var(--muted)}
+.note{background:var(--accent-soft);padding:10px 12px;border-radius:4px;font-size:.93rem}
+section.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:10px}
+section.card ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.refs li{font-size:.92rem}
+.refs a{color:var(--accent)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+th{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.tbl{overflow-x:auto}
+.jump{display:flex;flex-wrap:wrap;gap:6px}
+.jump a{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--fg);text-decoration:none;border:1px solid var(--line);background:var(--surface);padding:6px 9px;border-radius:4px}
+.jump a:focus-visible{outline:2px solid var(--accent)}
+.point{display:flex;flex-direction:column;gap:4px;padding-top:10px;border-top:1px solid var(--line)}
+.point h3{color:var(--heavy)}
+ol.steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.guide{display:flex;flex-direction:column;gap:6px}
+.guide details{border:1px solid var(--line);border-radius:4px}
+.guide summary{display:block;padding:10px 12px;font-weight:700}
+.guide summary::after{content:" +";color:var(--accent)}
+.guide details[open] summary::after{content:" −"}
+.guide p{padding:0 12px 12px;font-size:.95rem}
+@media (max-width:420px){h1{font-size:2.1rem}.score b{font-size:1.8rem}summary{grid-template-columns:50px 1fr auto}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:10px">
+    <span class="eyebrow">El Salvador · #77 · 26/10 → 28/11</span>
+    <h1>Protocolo Semifinais</h1>
+    <p class="muted">5 semanas: 2 de carga, polimento, jogo, mini-bloco, polimento, jogo. Quadra: quarta à noite, sexta de manhã, sábado de manhã. O resto é em casa.</p>
+    <div class="board">
+      <div class="score"><span>Jogo 1 · sáb 14/11</span><b id="c1">--</b><span>dias</span></div>
+      <div class="score"><span>Jogo 2 · sáb 28/11</span><b id="c2">--</b><span>dias</span></div>
+    </div>
+  </header>
+
+  <nav class="jump">
+    <a href="#resumo">Resumo</a><a href="#verdade">Verdades duras</a><a href="#intensidade">Intensidade</a><a href="#carga">Escolher carga</a><a href="#guia">Exercícios</a><a href="#tatica">Tática</a><a href="#plano">Dia a dia</a><a href="#jogo">Dia de jogo</a><a href="#check">Verificação</a>
+  </nav>
+
+  <section class="card" id="resumo">
+    <span class="eyebrow">1 · Resumo executivo</span>
+    <h2>O plano em 30 segundos</h2>
+    <div class="tbl"><table>
+      <tr><th>Semana</th><th>Objetivo</th><th>Sensação esperada</th></tr>
+      <tr><td><b>S1</b> 26/10–01/11</td><td>Carga. Aprender as cargas, teste base na quarta.</td><td>Cansado no fim da semana, mas inteiro.</td></tr>
+      <tr><td><b>S2</b> 02/11–08/11</td><td>Pico. A semana mais dura.</td><td>Pernas pesadas. Normal.</td></tr>
+      <tr><td><b>S3</b> 09/11–14/11</td><td>Polimento + Jogo 1.</td><td>"Treinei pouco." É o objetivo: o cansaço some e a forma fica.</td></tr>
+      <tr><td><b>S4</b> 15/11–21/11</td><td>Recuperar e recarregar.</td><td>Moderado.</td></tr>
+      <tr><td><b>S5</b> 22/11–28/11</td><td>Polimento curto + Jogo 2.</td><td>Leve, com energia sobrando.</td></tr>
+    </table></div>
+    <p><b>Semana padrão:</b> seg força de pernas + cardio leve · ter intervalado + core · <b>qua quadra</b> (técnica + sprint) · qui potência + superior · <b>sex quadra</b> (simulação do revezamento + arremesso) · <b>sáb quadra</b> (3×3) · dom descanso.</p>
+    <p class="cue">Por que essa ordem: os dias pesados de perna (seg) ficam longe dos dias de quadra mais intensos, e o tendão tem pelo menos um dia mais leve entre os dias de impacto.</p>
+  </section>
+
+  <section class="card" id="verdade">
+    <span class="eyebrow">2 · Sem filtro</span>
+    <h2>Onde eu discordo de você</h2>
+    <div class="point"><h3>"Nada de pouca coisa" está errado na semana do jogo</h3><p>Treino gera duas coisas ao mesmo tempo: forma e cansaço. O cansaço vai embora em dias, a forma demora semanas para cair. O polimento usa essa diferença: você corta volume, o cansaço some e a forma aparece. A meta-análise de Bosquet (2007) mostra o melhor resultado com ~2 semanas, volume cortado em 41–60% e intensidade mantida. Se você encher S3 e S5 de treino, entra na semifinal cansado.</p></div>
+    <div class="point"><h3>Fôlego não muda muito em 3 semanas</h3><p>Os estudos de sprint repetido no basquete usaram 6 semanas para mostrar ganho. Você vai melhorar um pouco até 14/11, e mais até 28/11. A diferença grande contra o trio deles vem de chegar descansado e gastar energia só onde rende (veja a seção Tática).</p></div>
+    <div class="point"><h3>O tendão é o maior risco do seu mês</h3><p>Você tem tendinopatia de Aquiles confirmada em ressonância, joga com mais de 110 kg e sente dor depois de sprints e saltos. Por isso o volume de sprint e salto é limitado de propósito. Mais sprint não compensa uma lesão que te tira das duas semifinais.</p></div>
+  </section>
+
+  <div class="warn">
+    <h3>Antes de começar: 3 coisas que não são negociáveis</h3>
+    <p><b>1. Tendão de Aquiles.</b> Toda manhã, dê nota de 0 a 10 para a dor/rigidez do tendão nos primeiros passos. Até 3 e igual ao dia anterior: segue o plano. Acima de 3, ou pior que ontem: corta sprints e saltos do dia e faz só a versão "tendão" isométrica. Perder a semifinal por ruptura é o pior cenário possível.</p>
+    <p><b>2. Aparelhos.</b> Montei com halteres/kettlebell, elástico, banco ou degrau e barra fixa. Onde aparece "bike", vale bike, remo ou esteira inclinada. Se faltar algo, a alternativa está ao lado do exercício. Me mande a lista exata dos seus aparelhos que eu ajusto.</p>
+    <p><b>3. Comida.</b> Com Mounjaro e jejum até o almoço, você corre risco de treinar vazio. Nos dias de quadra de manhã e nos jogos, quebre o jejum 2,5–3 h antes com carboidrato + proteína. Confirme com seu médico se precisa ajustar horário da dose em semana de jogo.</p>
+  </div>
+
+  <section class="card" id="intensidade">
+    <span class="eyebrow">3 · Linguagem do plano</span>
+    <h2>Como ler a intensidade</h2>
+    <div class="legend">
+      <div class="lg t-heavy"><b>Pesado</b>Carga alta, 3–6 reps, descida lenta (3 s). Termine com 2 reps "sobrando" (RIR 2). Descanso 2–3 min.</div>
+      <div class="lg t-strong"><b>Forte</b>Carga moderada, 8–12 reps, controle total. RIR 2–3. Descanso 60–90 s.</div>
+      <div class="lg t-fast"><b>Explosivo</b>Carga leve, máxima velocidade. Pare a série quando a velocidade cair. Descanso completo.</div>
+      <div class="lg t-light"><b>Leve / Z2</b>Ritmo em que você consegue falar frases. Serve para recuperar e construir base.</div>
+    </div>
+    <p class="cue"><b>RIR</b> = repetições na reserva: quantas você ainda conseguiria fazer com boa técnica. <b>PSE</b> = esforço percebido de 0 a 10. "Forte" no intervalado = PSE 8: fala só palavras soltas.</p>
+    <div class="tbl"><table>
+      <tr><th>Termo</th><th>O que significa na prática</th></tr>
+      <tr><td>4×5</td><td>4 séries de 5 repetições.</td></tr>
+      <tr><td>4×6–8 cada</td><td>4 séries de 6 a 8 repetições em cada perna/braço.</td></tr>
+      <tr><td>3 s descendo</td><td>Conte "mil e um, mil e dois, mil e três" na fase de descida.</td></tr>
+      <tr><td>Z2</td><td>Zona 2: ritmo de conversa. Se só consegue falar 3 palavras, está forte demais.</td></tr>
+      <tr><td>HSR</td><td>Heavy Slow Resistance: carga pesada e movimento lento. É o tratamento com melhor aceitação para tendinopatia de Aquiles.</td></tr>
+      <tr><td>Isometria</td><td>Segurar parado numa posição, sem movimento. Carrega o tendão com pouco risco.</td></tr>
+      <tr><td>Vaivém 20 m</td><td>Correr 20 m, frear, voltar. No estudo, 6 desses com 20 s de pausa = 1 série.</td></tr>
+    </table></div>
+  </section>
+
+  <section class="card" id="carga">
+    <span class="eyebrow">4 · Passo a passo</span>
+    <h2>Como escolher a carga certa</h2>
+    <ol class="steps">
+      <li><b>Primeira série de aquecimento:</b> metade da carga que você acha certa, 5 reps.</li>
+      <li><b>Série de teste:</b> pegue a carga que você acha certa e faça as reps pedidas.</li>
+      <li><b>Pergunte:</b> quantas reps eu ainda faria com técnica perfeita? Esse é o RIR.</li>
+      <li><b>Ajuste:</b> RIR maior que o pedido, sobe a carga. RIR menor, desce. Se sobrou 5 reps em "Pesado", está leve demais.</li>
+      <li><b>Anote</b> a carga de cada exercício no celular. Na S2, suba 2–5% se a S1 saiu com o RIR certo.</li>
+    </ol>
+    <p class="note"><b>Se o halter mais pesado ficou leve:</b> faça a versão de uma perna só (búlgaro em vez de agachamento, stiff unilateral em vez de stiff), ou aumente o tempo de descida para 5 s. Isso deixa o exercício pesado de novo sem precisar de mais peso.</p>
+  </section>
+
+  <section class="card" id="guia">
+    <span class="eyebrow">5 · Execução</span>
+    <h2>Guia dos exercícios</h2>
+    <p class="muted">O que fazer, onde errar e por que isso ajuda no seu jogo.</p>
+    <div class="guide">
+      <details><summary>Agachamento goblet / com halteres</summary><p><b>Como:</b> halter na frente do peito, pés na largura dos ombros. Desça 3 s até a coxa passar da paralela, suba forte. <b>Erro comum:</b> joelho entrando para dentro e calcanhar subindo. <b>Para o jogo:</b> força para segurar posição no post e para o primeiro passo.</p></details>
+      <details><summary>Agachamento búlgaro</summary><p><b>Como:</b> pé de trás apoiado no banco, desça até o joelho de trás quase tocar o chão. Tronco levemente inclinado. <b>Erro comum:</b> passo curto demais (joelho da frente passa muito do pé). <b>Para o jogo:</b> força de uma perna, que é como você sai na infiltração.</p></details>
+      <details><summary>Stiff (RDL) com halteres</summary><p><b>Como:</b> joelhos levemente dobrados e fixos, empurre o quadril para trás até sentir o posterior da coxa esticar. Halteres rentes às pernas. <b>Erro comum:</b> arredondar a lombar. <b>Para o jogo:</b> posterior forte protege contra lesão de coxa nos sprints.</p></details>
+      <details><summary>Panturrilha unilateral no degrau (HSR)</summary><p><b>Como:</b> ponta do pé no degrau, segure um halter do mesmo lado. Suba em 3 s até a ponta máxima, desça em 3 s até o calcanhar ficar abaixo do degrau. Sem quicar. <b>Dor:</b> até 3/10 durante é aceitável se não piorar no dia seguinte. <b>Por quê:</b> é o exercício que trata o tendão. Não pule.</p></details>
+      <details><summary>Panturrilha sentada</summary><p><b>Como:</b> sentado, ponta dos pés num degrau, halter apoiado nos joelhos. Suba e desça controlado. <b>Por quê:</b> trabalha o sóleo, músculo que absorve a aterrissagem dos saltos.</p></details>
+      <details><summary>Prancha Copenhagen</summary><p><b>Como:</b> prancha lateral com a perna de cima apoiada no banco (pela parte de dentro do joelho ou tornozelo). A perna de baixo fica solta. <b>Iniciante:</b> apoie o joelho em vez do tornozelo. <b>Por quê:</b> protege a virilha nas mudanças de direção.</p></details>
+      <details><summary>Farmer carry</summary><p><b>Como:</b> um halter pesado em cada mão, ande com passos curtos, ombros para trás, tronco firme. <b>Por quê:</b> força de tronco e pegada para o contato no post.</p></details>
+      <details><summary>Push press com halteres</summary><p><b>Como:</b> halteres nos ombros, dobre os joelhos rápido (poucos centímetros) e empurre com as pernas e braços juntos até em cima. Carga leve a moderada. <b>Por quê:</b> treina gerar força das pernas até as mãos, como no arremesso com contato.</p></details>
+      <details><summary>Supino e remada com halter</summary><p><b>Supino:</b> deitado, desça em 3 s até o cotovelo passar do tronco, empurre forte. <b>Remada:</b> uma mão e um joelho no banco, puxe o halter com o cotovelo em direção ao bolso. <b>Por quê:</b> força para segurar e criar espaço no contato.</p></details>
+      <details><summary>Barra fixa</summary><p><b>Como:</b> pegada pronada, puxe até o queixo passar a barra. Pare 2 reps antes da falha. <b>Sem barra:</b> remada com elástico preso numa porta ou pilar.</p></details>
+      <details><summary>Pallof press</summary><p><b>Como:</b> elástico preso de lado na altura do peito. Segure com as duas mãos no peito e estique os braços à frente, sem deixar o tronco girar. <b>Por quê:</b> resistir à rotação = manter equilíbrio quando o defensor empurra.</p></details>
+      <details><summary>Kettlebell swing (alternativa à bike)</summary><p><b>Como:</b> o movimento vem do quadril, não dos braços. Empurre o quadril para trás e projete para frente, o peso sobe até a altura do peito. <b>Por quê:</b> cardio intenso sem impacto no tendão.</p></details>
+      <details><summary>Sprint repetido em quadra</summary><p><b>Como:</b> 6 tiros de 20 m vaivém (vai, freia, volta), 20 s de pausa entre eles, 4 min entre séries. Cronometre o 1º e o 6º. <b>O que melhora:</b> a diferença entre o primeiro e o último tiro tem que diminuir ao longo das semanas. Isso é fôlego de basquete.</p></details>
+    </div>
+  </section>
+
+  <section class="card" id="tatica">
+    <span class="eyebrow">6 · Tática</span>
+    <h2>Plano contra o revezamento de 3 marcadores</h2>
+    <p>Fôlego em 3 semanas melhora pouco. Os estudos com basquete mostram ganho real de sprint repetido em <b>6 semanas</b>. O que muda o jogo até 14/11 é chegar descansado e gastar energia só onde rende.</p>
+    <ul>
+      <li><b>Faça o marcador correr, não você.</b> Use bloqueio do Bento para trocar de marcador e atacar o pior defensor do trio.</li>
+      <li><b>Ande quando a bola está do outro lado.</b> Cortes e brigas de posição sem chance de receber custam fôlego e não geram nada.</li>
+      <li><b>Combine com o técnico 2 janelas curtas de descanso</b> por tempo, no seu horário escolhido (ex.: início do 2º e do 4º), em vez de esperar estourar.</li>
+      <li><b>Força o 2º defensor a decidir.</b> Ganhou o primeiro, solta a bola cedo. Isso cansa a defesa inteira, não só você.</li>
+      <li><b>Treino de sexta simula isso:</b> o defensor troca a cada 2 posses, você não troca.</li>
+    </ul>
+  </section>
+
+  <div id="plano" class="weekhead"><span class="eyebrow">7 · Dia a dia</span><h2>Seu calendário</h2><p class="muted">Escolha a semana. Toque no dia para abrir o passo a passo. Marque "feito" ao terminar (fica salvo neste aparelho).</p></div>
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+  <div id="week"></div>
+
+  <section class="card" id="jogo">
+    <span class="eyebrow">8 · Sábado de jogo</span>
+    <h2>Protocolo do dia de jogo</h2>
+    <div class="tbl"><table>
+      <tr><th>Quando</th><th>O quê</th></tr>
+      <tr><td>Véspera</td><td>Jantar com carboidrato (arroz, massa, batata) e proteína. Dormir cedo. Sem treino, só caminhada leve.</td></tr>
+      <tr><td>−3 h</td><td>Quebre o jejum: carboidrato + proteína, pouca gordura e fibra (ex.: pão/tapioca, ovos, banana, mel).</td></tr>
+      <tr><td>−2 h</td><td>500 ml de água com eletrólito. Santos em novembro esquenta.</td></tr>
+      <tr><td>−45 min</td><td>Isometria de panturrilha: 3×45 s cada perna, contra a parede ou degrau.</td></tr>
+      <tr><td>−30 min</td><td>Aquecimento 20 min: trote, deslocamento lateral, 3 acelerações a 70%, 2 a 90%, arremessos de perto para longe.</td></tr>
+      <tr><td>Durante</td><td>Água + isotônico a cada pausa. Use as janelas de descanso combinadas.</td></tr>
+      <tr><td>Depois</td><td>Refeição completa em até 2 h. Dia seguinte: só caminhada e mobilidade.</td></tr>
+    </table></div>
+  </section>
+
+  <section class="card">
+    <h2>Monitoramento semanal (todo domingo)</h2>
+    <ul>
+      <li>Peso em jejum e nota média do tendão na semana.</li>
+      <li>Frequência cardíaca de repouso ao acordar. Subiu 5+ batimentos por 2 dias seguidos: troque o próximo treino forte por Z2.</li>
+      <li>Tempo da série de sprints de quarta (cronometre o 1º e o último sprint). A diferença entre eles tem que diminuir.</li>
+      <li>Critério de ajuste: 2 semanas com dor do tendão subindo = corta todo o bloco de sprints e procura fisioterapeuta.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="check">
+    <span class="eyebrow">9 · Transparência</span>
+    <h2>Checklist de verificação</h2>
+    <div class="tbl"><table>
+      <tr><th>Afirmação</th><th>Status</th><th>Como confirmei</th></tr>
+      <tr><td>Polimento ideal ~2 semanas, volume −41 a −60%, intensidade mantida</td><td><span class="tag t-light">Confirmado</span></td><td>Resumo da meta-análise no PubMed (Bosquet et al., 2007).</td></tr>
+      <tr><td>Treino pesado e lento trata tendinopatia de Aquiles</td><td><span class="tag t-light">Confirmado</span></td><td>Estudo controlado randomizado de Beyer et al. (2015), via PEDro.</td></tr>
+      <tr><td>3×6×20 m vaivém e 3×3 em 4×4 min melhoram desempenho no basquete</td><td><span class="tag t-strong">Parcial</span></td><td>Resumo do repositório da Univ. de Milão. Autores e data não confirmados.</td></tr>
+      <tr><td>Estudos de sprint repetido usaram 6 semanas</td><td><span class="tag t-light">Confirmado</span></td><td>Resumos de dois estudos com jogadores de basquete.</td></tr>
+      <tr><td>Regra de dor até 3/10</td><td><span class="tag t-heavy">Escolha minha</span></td><td>Sem estudo que fixe esse número. Conservadora de propósito.</td></tr>
+      <tr><td>Cargas por RIR e séries de força</td><td><span class="tag t-heavy">Escolha minha</span></td><td>Prática comum de treino de força, sem fonte específica citada.</td></tr>
+      <tr><td>Isometria pré-quadra reduz dor do tendão</td><td><span class="tag t-strong">Incerto</span></td><td>Evidência mista. Uso como preparo, não como garantia.</td></tr>
+    </table></div>
+    <h3>O que você precisa me confirmar</h3>
+    <ul>
+      <li><b>Seus aparelhos.</b> Não tenho a lista exata. Mande peso dos halteres/kettlebell e se tem bike, remo, barra e elástico.</li>
+      <li><b>Formato das datas.</b> Tratei 14/11 e 28/11 como dois jogos aos sábados.</li>
+      <li><b>Mounjaro em semana de jogo.</b> Pergunte ao médico se precisa ajustar o horário da dose.</li>
+      <li><b>Fisioterapia.</b> Se a nota do tendão subir por 2 semanas seguidas, procure um fisioterapeuta antes do jogo 2.</li>
+    </ul>
+  </section>
+
+  <section class="card refs">
+    <span class="eyebrow">10 · Referências</span>
+    <h2>Base científica</h2>
+    <ul>
+      <li><a href="https://pubmed.ncbi.nlm.nih.gov/17762369/">Effects of tapering on performance: a meta-analysis</a> — Bosquet, Montpetit, Arvisais, Mujika. Med Sci Sports Exerc, ago/2007. Polimento ideal: ~2 semanas, volume −41 a −60%, intensidade mantida.</li>
+      <li><a href="https://search.pedro.org.au/search-results/record-detail/43703">Heavy slow resistance versus eccentric training as treatment for Achilles tendinopathy</a> — Beyer, Kongsgaard, Kjær et al. Am J Sports Med, jul/2015. Base do bloco "tendão".</li>
+      <li><a href="https://content.iospress.com/articles/isokinetics-and-exercise-science/ies182212">Repeated sprint training improves both anaerobic and aerobic fitness in basketball players</a> — Isokinetics and Exercise Science, 2019 (autores não confirmados). 2–3 séries de 6×30 m, 2×/semana, 6 semanas.</li>
+      <li><a href="https://air.unimi.it/handle/2434/607951">Effects of Ball-Drills and Repeated Sprint Ability Training in Basketball Players</a> — Univ. de Milão (autores e data não confirmados). 3×3 em 4×4 min e 3×6×20 m vaivém melhoraram desempenho.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+const W=[
+ {k:"S1",name:"Semana 1 · Carga",range:"26/10 – 01/11",goal:"Volume normal-alto. Aprender as cargas, fazer o teste base na quarta."},
+ {k:"S2",name:"Semana 2 · Pico",range:"02/11 – 08/11",goal:"A semana mais dura do plano. +1 série nos principais. Se o tendão reclamar, volte para a carga da S1."},
+ {k:"S3",name:"Semana 3 · Jogo 1",range:"09/11 – 14/11",goal:"Polimento: volume cai ~50%, intensidade fica. Você vai se sentir 'subtreinado'. É o efeito desejado."},
+ {k:"S4",name:"Semana 4 · Recarga",range:"15/11 – 21/11",goal:"2 dias de recuperação, depois volume moderado. Sem recorde, só manter."},
+ {k:"S5",name:"Semana 5 · Jogo 2",range:"22/11 – 28/11",goal:"Polimento curto. Chegar inteiro no sábado."}
+];
+const T={heavy:["t-heavy","Pesado"],strong:["t-strong","Forte"],fast:["t-fast","Explosivo"],light:["t-light","Leve"],game:["t-game","Jogo"]};
+const ex=(n,rx,t,cue)=>({n,rx,t,cue});
+
+/* blocos reutilizáveis */
+const AQ_CASA={h:"Aquecimento",m:"10 min",ex:[
+ ex("Bike ou caminhada","5 min","light","Só esquentar."),
+ ex("Mobilidade de tornozelo (joelho na parede)","2×10 cada","light","Calcanhar no chão, joelho passa da ponta do pé."),
+ ex("Ponte de glúteo","2×10","light","Segura 2 s em cima."),
+ ex("Isometria de panturrilha em pé","2×30 s cada perna","strong","Na ponta do pé, meio caminho. Prepara o tendão.")]};
+const TENDAO=(s)=>({h:"Bloco tendão (Aquiles)",m:"HSR · 12 min",ex:[
+ ex("Panturrilha unilateral no degrau com halter",s+"×6–8 cada perna","heavy","3 s subindo, 3 s descendo, sem quicar. Dor até 3/10 é aceitável."),
+ ex("Panturrilha sentada (halter sobre o joelho)","3×12–15","strong","Trabalha o sóleo, que absorve impacto na aterrissagem.")]});
+const TENDAO_ISO={h:"Bloco tendão (versão leve)",m:"6 min",ex:[ex("Isometria de panturrilha unilateral","4×45 s cada","strong","Carga que dá para segurar 45 s com esforço 7/10.")]};
+const AQ_QUADRA={h:"Aquecimento de quadra",m:"15 min",ex:[
+ ex("Trote + deslocamento lateral + carioca","5 min","light",""),
+ ex("Isometria de panturrilha","3×45 s cada","strong","Na parede do ginásio."),
+ ex("Skips e pequenos saltos no lugar","2×20 s","fast","Contato curto com o chão. Se o tendão doer aqui, nada de sprint hoje."),
+ ex("Acelerações progressivas","3× meia quadra a 60–80–90%","fast","")]};
+const MOB={h:"Mobilidade final",m:"8 min",ex:[ex("Quadril 90/90, posterior de coxa, peitoral na porta","1 min cada","light","Respiração lenta. Baixa a FC.")]};
+
+function forcaA(lvl){ // lvl: 'base','pico','polimento'
+ const sq=lvl==="pico"?"5×5":lvl==="polimento"?"3×3 (mesma carga)":"4×5";
+ const b=[AQ_CASA,{h:"Força inferior",m:lvl==="polimento"?"25 min":"40 min",ex:[
+  ex("Agachamento goblet ou com 2 halteres",sq,"heavy","Desce em 3 s, sobe com força. RIR 2. Descanso 2–3 min. Se o halter ficou leve, faça búlgaro pesado no lugar."),
+  ...(lvl==="polimento"?[]:[ex("Agachamento búlgaro (pé de trás no banco)","3×8 cada","strong","Tronco levemente à frente. Força unilateral = infiltração mais estável.")]),
+  ex("Stiff (RDL) com halteres",lvl==="polimento"?"2×5":"4×6","heavy","Quadril vai para trás, coluna neutra, 3 s na descida."),
+  ...(lvl==="polimento"?[]:[ex("Prancha Copenhagen (adutor)","3×20 s cada","strong","Protege virilha nas mudanças de direção."),
+  ex("Farmer carry (andar com halteres pesados)","4×30 m","heavy","Tronco duro, passos curtos. Força de contato no post.")])]},
+ TENDAO(lvl==="polimento"?3:4),
+ {h:"Cardio base",m:lvl==="polimento"?"20 min":"30 min",ex:[ex("Bike, remo ou caminhada inclinada em Z2",lvl==="polimento"?"20 min":"30 min","light","Ritmo de conversa. Isso acelera a recuperação entre sprints no jogo.")]}];
+ return b;}
+
+function cond(lvl){
+ const big=lvl==="pico"?"4×4 min":lvl==="polimento"?"2×4 min":"3×4 min";
+ const rep=lvl==="pico"?"10×15 s":lvl==="polimento"?"6×15 s":"8×15 s";
+ return [AQ_CASA,{h:"Intervalado sem impacto",m:"35 min",ex:[
+  ex("Bike/remo: blocos longos",big+" · 3 min leve entre","strong","PSE 8: fala só palavras soltas. Sem bike: 40 s kettlebell swing + 20 s marcha, repetido dentro dos 4 min."),
+  ex("Bike/remo: tiros curtos",rep+" · 45 s leve entre","fast","Tudo o que tem nos 15 s. Imita a posse de basquete. Sem bike: 15 s swing máximo."),
+  ex("Volta à calma","5 min","light","")]},
+ {h:"Core para contato",m:"10 min",ex:[
+  ex("Pallof press com elástico","3×10 cada lado","strong","Elástico puxa para o lado, você não deixa girar."),
+  ex("Prancha lateral","3×30 s cada","strong",""),
+  ex("Dead bug","3×8 cada","light","Lombar colada no chão.")]}];}
+
+function forcaB(lvl){
+ const p=lvl==="polimento";
+ return [AQ_CASA,{h:"Potência + superior",m:p?"20 min":"35 min",ex:[
+  ex("Push press com halteres",p?"3×3":"4×4","fast","Carga leve-moderada. Joelho dobra rápido e o halter sobe explosivo. Transfere para o arremesso em contato."),
+  ex("Supino com halteres (banco ou chão)",p?"2×6":"4×6","heavy","Desce 3 s. RIR 2."),
+  ex("Remada unilateral com halter",p?"2×8":"4×8 cada","heavy","Puxa com o cotovelo para o bolso."),
+  ex("Barra fixa (ou remada com elástico)",p?"2× máx−3":"4× máx−2","strong","Para 2 reps antes da falha."),
+  ...(p?[]:[ex("Pallof press com elástico","3×10 cada","strong","")])]},
+ TENDAO_ISO,MOB];}
+
+function quadraQua(series,extra){
+ const rsa=series>0?[ex("Sprint repetido com bola",series+" série(s) de 6×20 m vaivém · 20 s entre sprints · 4 min entre séries","fast","Linha de fundo até o lance livre do outro lado e volta, finalizando bandeja. Cronometre o 1º e o 6º sprint da 1ª série."),
+  ex("Arremesso cansado (após cada série)","10 lances livres + 5 de 3","strong","Com a FC alta. É assim que você vai arremessar no 4º período.")]:[];
+ return [AQ_QUADRA,{h:"Técnica contra marcação individual",m:"25 min",ex:[
+  ex("Receber em movimento (V-cut, L-cut, backdoor)","4 blocos de 3 min","strong","Contra defensor real se tiver. Objetivo: receber já em vantagem, sem brigar 10 s pela bola."),
+  ex("2×2 com o Bento (P&R e DHO)","15 posses","strong","Leia a troca: se o pior defensor ficou com você, ataque. Se veio ajuda, solte."),
+  ex("Finalizar em até 2 dribles","20 tentativas","fast","Menos drible = menos energia.")]},
+ ...(rsa.length?[{h:"Fôlego específico",m:"15–20 min",ex:rsa}]:[]),
+ ...(extra?[extra]:[]),
+ {h:"Coletivo (se houver)",m:"livre",ex:[ex("Jogo/coletivo","o que o grupo fizer","strong","Pratique as janelas de descanso e o andar quando a bola está longe.")]}];}
+
+function quadraSex(lvl){
+ if(lvl==="shoot") return [AQ_QUADRA,{h:"Shootaround",m:"30 min",ex:[
+  ex("Rotina de arremessos das suas posições de jogo","~100 arremessos","light","Ritmo de jogo, sem pressa, sem sprint."),
+  ex("Lances livres","20","light","Mesma rotina que vai usar amanhã.")]}];
+ return [AQ_QUADRA,{h:"Drill revezamento",m:"25 min",ex:[
+  ex("1×1 com defensor que troca a cada 2 posses",(lvl==="pico"?"5":"4")+" blocos de 3 min · 2 min descanso","strong","Você não troca. Simula o trio deles. Priorize ganhar com pouco drible e passar quando vier o 2º."),
+  ex("Sem parceiros: ataque ao cone após 10 s de deslizamento defensivo","4×6 ataques","fast","Chega cansado e decide rápido.")]},
+ {h:"Volume de arremesso",m:"20 min",ex:[
+  ex("Catch-and-shoot saindo do bloqueio","5 posições × 10","strong",""),
+  ex("Pull-up indo para a direita/meio (seu lado forte)","30","strong",""),
+  ex("Lances livres em fadiga (após 4 tiros de quadra)","3×5","strong","")]},MOB];}
+
+function quadraSab(blocks){
+ return [AQ_QUADRA,{h:"3×3 condicionante",m:(blocks*7)+" min",ex:[
+  ex("3×3 meia quadra",blocks+"×4 min · 3 min descanso parado","strong","Fôlego com bola: estudo com basquete mostrou ganho igual ao sprint puro. Se tiver gente para 5×5, faça coletivo no lugar."),
+  ex("Lances livres entre blocos","2 por pausa","light","")]},MOB];}
+
+const DESC_ATIVO=[{h:"Descanso ativo",m:"40 min",ex:[
+ ex("Caminhada leve ou bike","30–40 min","light",""),
+ ex("Mobilidade de tornozelo, quadril e coluna","10 min","light",""),
+ ex("Checklist da semana","peso, tendão, FC de repouso","light","Veja o bloco de monitoramento abaixo.")]}];
+const DESC_TOTAL=[{h:"Descanso",m:"",ex:[ex("Nada estruturado","—","light","Família, sono, comida. Se quiser, caminhada de 20 min.")]}];
+const JOGO=[{h:"Dia de jogo",m:"",ex:[ex("Siga o protocolo do dia de jogo","ver tabela abaixo","game","Plano tático: faça o trio correr, ande quando a bola está longe, use as janelas de descanso.")]}];
+const POS_JOGO=[{h:"Recuperação pós-jogo",m:"30 min",ex:[ex("Caminhada leve","20–30 min","light",""),ex("Isometria de panturrilha","3×30 s","light","Só para avaliar o tendão. Dê a nota de dor.")]}];
+const RECUP=[{h:"Recuperação",m:"45 min",ex:[ex("Bike/caminhada Z2","30 min","light",""),...TENDAO_ISO.ex,ex("Mobilidade completa","10 min","light","")]}];
+
+const D=[
+ // S1
+ ["2026-10-26","seg","S1","Casa · Força inferior + Z2",["heavy","light"],forcaA("base"),"Primeiro dia: escolha cargas conservadoras e anote. Na S2 você sobe."],
+ ["2026-10-27","ter","S1","Casa · Intervalado + core",["strong","fast"],cond("base")],
+ ["2026-10-28","qua","S1","Quadra noite · Técnica + sprint repetido (teste base)",["strong","fast"],quadraQua(2),"Anote o tempo do 1º e do 6º sprint da 1ª série. É sua linha de base."],
+ ["2026-10-29","qui","S1","Casa · Potência + superior",["fast","heavy"],forcaB("base")],
+ ["2026-10-30","sex","S1","Quadra manhã · Drill revezamento + arremesso",["strong"],quadraSex("base"),"Quebre o jejum antes desta sessão."],
+ ["2026-10-31","sab","S1","Quadra manhã · 3×3 condicionante",["strong"],quadraSab(4)],
+ ["2026-11-01","dom","S1","Descanso ativo + check semanal",["light"],DESC_ATIVO],
+ // S2
+ ["2026-11-02","seg","S2","Casa · Força inferior pesada + Z2",["heavy","light"],forcaA("pico"),"Suba 2–5% a carga do agachamento e do stiff se a semana passada saiu com RIR 2."],
+ ["2026-11-03","ter","S2","Casa · Intervalado (volume máximo)",["strong","fast"],cond("pico")],
+ ["2026-11-04","qua","S2","Quadra noite · Técnica + 3 séries de sprint",["strong","fast"],quadraQua(3),"Só faça a 3ª série se a nota do tendão estiver ≤3."],
+ ["2026-11-05","qui","S2","Casa · Potência + superior",["fast","heavy"],forcaB("base")],
+ ["2026-11-06","sex","S2","Quadra manhã · Drill revezamento (5 blocos)",["strong"],quadraSex("pico")],
+ ["2026-11-07","sab","S2","Quadra manhã · 3×3 condicionante (5 blocos)",["strong"],quadraSab(5)],
+ ["2026-11-08","dom","S2","Descanso ativo + check semanal",["light"],DESC_ATIVO],
+ // S3
+ ["2026-11-09","seg","S3","Casa · Força curta e pesada",["heavy","light"],forcaA("polimento"),"Mesma carga da S2, metade das séries. Saia do treino com vontade de fazer mais."],
+ ["2026-11-10","ter","S3","Casa · Intervalado curto",["strong","fast"],cond("polimento")],
+ ["2026-11-11","qua","S3","Quadra noite · Plano de jogo + 1 série de sprint",["strong","fast"],quadraQua(1,{h:"Plano de jogo",m:"15 min",ex:[ex("Ensaiar com o time: bloqueio para trocar marcador, janelas de descanso","5–6 situações","light","Combine com o técnico e com o Bento quem bloqueia e quando.")]}),"Sessão de no máximo 75 min. Cronometre a série de sprint e compare com 28/10."],
+ ["2026-11-12","qui","S3","Casa · Ativação leve",["fast","light"],forcaB("polimento")],
+ ["2026-11-13","sex","S3","Quadra manhã · Shootaround",["light"],quadraSex("shoot"),"Jantar com carboidrato hoje. Dormir cedo."],
+ ["2026-11-14","sab","S3","SEMIFINAL · Jogo 1",["game"],JOGO,null,true],
+ // S4
+ ["2026-11-15","dom","S4","Recuperação pós-jogo",["light"],POS_JOGO,"Avalie o tendão e o corpo. Me mande impressões e vídeo do jogo se tiver."],
+ ["2026-11-16","seg","S4","Casa · Recuperação ativa",["light"],RECUP],
+ ["2026-11-17","ter","S4","Casa · Força inferior",["heavy","light"],forcaA("base")],
+ ["2026-11-18","qua","S4","Quadra noite · Técnica + 2 séries de sprint",["strong","fast"],quadraQua(2),"Ajuste a técnica com base no que aconteceu no jogo 1."],
+ ["2026-11-19","qui","S4","Casa · Intervalado + core",["strong","fast"],cond("base")],
+ ["2026-11-20","sex","S4","Quadra manhã · Drill revezamento",["strong"],quadraSex("base")],
+ ["2026-11-21","sab","S4","Quadra manhã · 3×3 (3 blocos)",["strong"],quadraSab(3)],
+ // S5
+ ["2026-11-22","dom","S5","Descanso",["light"],DESC_TOTAL],
+ ["2026-11-23","seg","S5","Casa · Força curta e pesada",["heavy","light"],forcaA("polimento")],
+ ["2026-11-24","ter","S5","Casa · Intervalado curto + ativação superior",["strong","fast"],[...cond("polimento"),{h:"Superior leve",m:"10 min",ex:[ex("Push press leve","3×3","fast",""),ex("Remada unilateral","2×8 cada","strong","")]}]],
+ ["2026-11-25","qua","S5","Quadra noite · Plano de jogo + 1 série curta",["strong","fast"],quadraQua(1,{h:"Plano de jogo",m:"15 min",ex:[ex("Corrigir o que falhou no jogo 1","situações específicas","light","")]}),"Máximo 70 min."],
+ ["2026-11-26","qui","S5","Casa · Z2 + mobilidade",["light"],[{h:"Soltar",m:"35 min",ex:[ex("Bike Z2","20 min","light",""),...TENDAO_ISO.ex,ex("Mobilidade","10 min","light","")]}]],
+ ["2026-11-27","sex","S5","Quadra manhã · Shootaround",["light"],quadraSex("shoot"),"Jantar com carboidrato. Dormir cedo."],
+ ["2026-11-28","sab","S5","Jogo 2",["game"],JOGO,null,true]
+];
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+const todayISO=(()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")})();
+
+function renderWeek(k){
+ const w=W.find(x=>x.k===k);
+ const days=D.filter(d=>d[2]===k);
+ let h=`<div class="weekhead"><span class="eyebrow">${esc(w.range)}</span><h2>${esc(w.name)}</h2><p class="muted">${esc(w.goal)}</p></div><div class="days" style="margin-top:12px">`;
+ days.forEach(d=>{
+  const [iso,wd,,title,tags,blocks,note,isGame]=d;
+  const dd=iso.slice(8,10)+"/"+iso.slice(5,7);
+  const id="done-"+iso; const checked=store(id)==="1"?"checked":"";
+  const cls=["day",isGame?"game":"",iso===todayISO?"today":""].join(" ");
+  h+=`<details class="${cls}" ${iso===todayISO||isGame?"open":""}><summary>
+   <div class="date"><b>${dd.slice(0,2)}</b><small>${wd} · ${dd.slice(3)}</small></div>
+   <div class="sumtxt"><strong>${esc(title)}</strong><div class="tags">${tags.map(t=>`<span class="tag ${T[t][0]}">${T[t][1]}</span>`).join("")}</div></div>
+   <label class="done" onclick="event.stopPropagation()"><input type="checkbox" id="${id}" ${checked}>feito</label></summary><div class="body">`;
+  if(note) h+=`<p class="note">${esc(note)}</p>`;
+  blocks.forEach(b=>{
+   h+=`<div class="block"><h4>${esc(b.h)}${b.m?` <em>${esc(b.m)}</em>`:""}</h4><ol class="ex">`;
+   b.ex.forEach(e=>{h+=`<li><div><div class="exn"><b>${esc(e.n)}</b><span class="tag ${T[e.t][0]}">${T[e.t][1]}</span></div><div class="rx">${esc(e.rx)}</div>${e.cue?`<div class="cue">${esc(e.cue)}</div>`:""}</div></li>`});
+   h+=`</ol></div>`;});
+  h+=`</div></details>`;});
+ h+=`</div>`;
+ document.getElementById("week").innerHTML=h;
+ document.querySelectorAll('#week input[type=checkbox]').forEach(c=>c.addEventListener("change",()=>store(c.id,c.checked?"1":"0")));
+ document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute("aria-selected",b.dataset.k===k?"true":"false"));
+ store("wk",k);
+}
+const tabs=document.getElementById("tabs");
+W.forEach(w=>{const b=document.createElement("button");b.textContent=w.k+" · "+w.range.split(" – ")[0];b.dataset.k=w.k;b.setAttribute("role","tab");b.onclick=()=>renderWeek(w.k);tabs.appendChild(b)});
+const cur=(D.find(d=>d[0]>=todayISO)||D[0])[2];
+renderWeek(cur);
+function days(to){const t=new Date(to+"T00:00:00"),n=new Date();n.setHours(0,0,0,0);return Math.max(0,Math.round((t-n)/864e5))}
+document.getElementById("c1").textContent=days("2026-11-14");
+document.getElementById("c2").textContent=days("2026-11-28");
+</script>
+
+</body></html>
